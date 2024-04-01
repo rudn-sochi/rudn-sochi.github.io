@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API</title>
+</head>
+<body>
+    <script>
+        function fetchJSON(url) {
+            return fetch(url)
+                .then(response => response.json())
+                .catch((error) => {
+                    console.log(error);
+                });
+        }
+        
+        (async () => {
+            const json = await fetchJSON('https://mmis-web.rudn-sochi.ru/api/raspAudlist');
+            const urlParams = new URLSearchParams(window.location.search);
+            const location = await urlParams.get('location');
+            let id = 0
+            for (let index = 0; index < json.data.length; index++) {
+                const element = json.data[index];
+                if (element.name == location) {
+                    id = element.id
+                    break
+                }
+            }
+        
+            const w = `https://mmis-web.rudn-sochi.ru/WebApp/#/Rasp/Aud/${id ?? 0}`;
+            window.location.href = w;
+        })();      
+        </script>
+</body>
+</html>
